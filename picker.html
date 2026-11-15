@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Подбор фильма — MovieMind</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="picker">
+<div id="site-header"></div>
+<main>
+  <section class="page-head"><div class="wrap">
+    <p class="crumbs"><a href="index.html">Главная</a> / Подбор</p>
+    <h1>Подбор фильма</h1><p class="lead">Два шага, и подборка готова.</p>
+  </div></section>
+  <section class="wrap">
+    <div class="panel wizard">
+      <!-- Индикатор прогресса: теперь шагов два -->
+      <div class="progress" id="progWrap" role="progressbar" aria-label="Прогресс подбора" aria-valuemin="1" aria-valuemax="2" aria-valuenow="1"><span id="progBar"></span></div>
+      <p class="meta" id="stepLabel">Шаг 1 из 2</p>
+
+      <!-- Шаг 1: только жанры -->
+      <div class="pane active" data-step="1">
+        <h2>Какие жанры нравятся?</h2>
+        <div class="chips" id="pickGenres"></div>
+        <p class="meta" style="margin-top:12px">Можно выбрать несколько.</p>
+      </div>
+
+      <!-- Шаг 2: остальные фильтры вместе, включая настроение -->
+      <div class="pane" data-step="2">
+        <h2>Уточните параметры</h2>
+        <!-- renderFilters() вставит сюда год, рейтинг и диапазон настроения -->
+        <div id="pickParams"></div>
+      </div>
+
+      <div class="wiz-actions">
+        <button class="btn btn-ghost" id="backBtn" type="button">Назад</button>
+        <button class="btn btn-main" id="nextBtn" type="button">Далее</button>
+      </div>
+    </div>
+    <div class="msg error" id="dataError" hidden>Не удалось загрузить каталог. Проверьте файл data/movies.js.</div>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="data/movies.js"></script>
+<script src="data/availability.js"></script>
+<script src="func.js" defer></script>
+</body>
+</html>

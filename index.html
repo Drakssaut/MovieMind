@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MovieMind — подбор фильма за минуту</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="index">
+<div id="site-header"></div>
+<main>
+  <section class="hero">
+    <div class="orb o1"></div><div class="orb o2"></div>
+    <div class="wrap hero-in">
+      <div>
+        <span class="pill">Учебный проект ГУАП</span>
+        <h1>Не знаешь, что посмотреть?<br><span class="grad-text">Подберём за минуту</span></h1>
+        <p class="lead">Выбери настроение и жанры, получи подборку с процентом совпадения и сразу узнай, где фильм можно посмотреть.</p>
+        <div class="hero-btns">
+          <a class="btn btn-main" href="picker.html">Подобрать фильм</a>
+          <a class="btn btn-ghost" href="catalog.html">Открыть каталог</a>
+          <button class="btn btn-ghost" id="randomBtn" type="button">🎲 Случайный фильм</button>
+        </div>
+        <div class="stats">
+          <div class="stat"><b id="statMovies">0</b>фильмов</div>
+          <div class="stat"><b id="statGenres">0</b>жанров</div>
+          <div class="stat"><b id="statSources">0</b>источников просмотра</div>
+        </div>
+      </div>
+      <div class="stack" id="heroStack" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2>Куда пойдём?</h2>
+    <div class="tiles">
+      <a class="tile" href="catalog.html"><span class="ico">🔎</span><h3>Каталог</h3><p>Поиск, фильтры по жанру, году, рейтингу и настроению.</p></a>
+      <a class="tile" href="picker.html"><span class="ico">🎭</span><h3>Подбор</h3><p>Три шага: настроение, жанры, детали.</p></a>
+      <a class="tile" href="recommendations.html"><span class="ico">⭐</span><h3>Рекомендации</h3><p>Лучшие совпадения с процентом.</p></a>
+      <a class="tile" href="later.html"><span class="ico">🔖</span><h3>Посмотреть позже</h3><p>Ваш личный список фильмов.</p></a>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2>Как это работает</h2>
+    <div class="steps">
+      <div class="step"><i>1</i><h3>Выбери настроение</h3><p class="meta">От 1 (очень грустно) до 10 (очень весело).</p></div>
+      <div class="step"><i>2</i><h3>Получи подборку</h3><p class="meta">Фильмы с процентом совпадения.</p></div>
+      <div class="step"><i>3</i><h3>Узнай, где смотреть</h3><p class="meta">Российские платформы или другой сайт.</p></div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="row-head"><h2>Топ по рейтингу</h2><a href="catalog.html">Весь каталог →</a></div>
+    <div class="hscroll" id="topRow"></div>
+  </section>
+
+  <section class="wrap">
+    <div class="cta"><h2>Не можешь выбрать?</h2><p>Ответь на три вопроса, и мы предложим подходящие фильмы.</p><a class="btn btn-dark" href="picker.html">Пройти подбор</a></div>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="data/movies.js"></script>
+<script src="data/availability.js"></script>
+<script src="func.js" defer></script>
+</body>
+</html>
