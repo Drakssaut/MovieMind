@@ -1,0 +1,424 @@
+/* MovieMind — тёплая тема «кино-закат»:
+   оранжевый, жёлтый, красный и тёплый серый + округлая типографика.
+   Подключается после style.css и мягко переопределяет оформление. */
+
+:root{
+  --bg:#161210;
+  --surface:#221b17;
+  --surface-2:#2d241d;
+  --border:#4b3a2e;
+  --text:#fff5e6;
+  --muted:#c9b7a5;
+  --accent:#ff8a3d;
+  --accent-2:#ffc247;
+  --accent-3:#e8402a;
+  --paper:#f9ecd7;
+  --ink:#2a1a10;
+  --r:16px;
+  --serif:'Nunito',ui-rounded,'SF Pro Rounded',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  --sans:'Nunito',ui-rounded,'SF Pro Rounded',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  --grad:linear-gradient(135deg,#ffc247 0%,#ff8a3d 48%,#e8402a 100%);
+  --grad-soft:linear-gradient(135deg,rgba(255,194,71,.18),rgba(232,64,42,.16));
+  --ring:0 0 0 3px rgba(255,138,61,.3);
+}
+
+::selection{background:var(--accent);color:#2b1206}
+
+body{
+  font-family:var(--sans);
+  font-size:15.5px;
+  line-height:1.65;
+  letter-spacing:.01em;
+  background:
+    radial-gradient(1100px 560px at 10% -8%,#3d2517 0%,transparent 62%),
+    radial-gradient(900px 520px at 100% -4%,#3d1a13 0%,transparent 58%),
+    var(--bg);
+}
+
+/* Тонкая градиентная полоса сверху страницы */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0 0 auto 0;
+  height:4px;
+  background:var(--grad);
+  z-index:200;
+  pointer-events:none;
+  box-shadow:0 0 18px rgba(255,138,61,.55);
+}
+
+::-webkit-scrollbar{width:12px;height:12px}
+::-webkit-scrollbar-track{background:#141110}
+::-webkit-scrollbar-thumb{background:linear-gradient(#ff9a45,#e8402a);border:3px solid #141110;border-radius:999px}
+
+:focus-visible{outline:3px solid var(--accent-2);outline-offset:4px;border-radius:6px}
+
+/* ── Типографика ─────────────────────────────────────────────── */
+h1,h2,h3,.logo,.poster-title,.mood-collection h3,dialog h3{font-family:var(--serif)}
+h1,h2{font-weight:900;letter-spacing:-.018em;line-height:1.1}
+h1{font-size:clamp(38px,4.7vw,68px)}
+h2{font-size:clamp(27px,2.8vw,40px);letter-spacing:-.012em}
+h3{font-weight:700;letter-spacing:-.005em;line-height:1.4}
+
+em{
+  font-style:normal;
+  font-weight:700;
+  color:var(--accent-2);
+  background:linear-gradient(135deg,#ffd66e 0%,#ff9a45 55%,#ff6a34 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.eyebrow{
+  font-family:var(--sans);
+  font-weight:800;
+  font-size:10.5px;
+  letter-spacing:.15em;
+  color:var(--accent-2);
+}
+.lead{font-size:15px;font-weight:500;line-height:1.75;color:var(--muted)}
+.meta,.note{font-weight:600}
+
+/* ── Шапка ───────────────────────────────────────────────────── */
+#site-header{position:sticky;top:0;z-index:90}
+.header{
+  background:rgba(22,18,16,.86);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.logo{font-weight:800;letter-spacing:-.01em;color:#fff}
+.logo svg{color:var(--accent);filter:drop-shadow(0 0 10px rgba(255,138,61,.5))}
+
+nav a{font-weight:700;font-size:12.5px;letter-spacing:.015em;color:var(--muted);transition:color .18s}
+nav a:hover{color:var(--accent-2)}
+nav a.active{color:#fff}
+nav a.active:after{height:3px;border-radius:3px;background:var(--grad)}
+.count{
+  border:1.5px solid rgba(255,194,71,.55);
+  color:var(--accent-2);
+  font-weight:800;
+  border-radius:999px;
+  background:rgba(255,194,71,.08);
+}
+.quick input.input{
+  background:rgba(255,255,255,.04);
+  border:1.5px solid var(--border);
+  border-radius:999px;
+  padding:9px 15px;
+  font-weight:600;
+}
+.quick input.input:focus{border-color:var(--accent);box-shadow:var(--ring);outline:none}
+
+/* ── Кнопки ──────────────────────────────────────────────────── */
+.btn{
+  border-radius:999px;
+  border:2px solid transparent;
+  padding:14px 26px;
+  font-family:var(--sans);
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:.02em;
+  transition:transform .18s ease,box-shadow .18s ease,background .18s ease,color .18s ease,border-color .18s ease;
+}
+.btn-main{
+  background:var(--grad);
+  color:#2b1206;
+  border-color:#ffd98a;
+  box-shadow:0 12px 26px -12px rgba(232,64,42,.85),inset 0 1px 0 rgba(255,255,255,.5);
+}
+.btn-main:hover{
+  background:linear-gradient(135deg,#ffd166 0%,#ff9448 48%,#f04b30 100%);
+  transform:translateY(-3px);
+  box-shadow:0 18px 34px -14px rgba(255,122,41,.9),inset 0 1px 0 rgba(255,255,255,.65);
+}
+.btn-main:active{transform:translateY(-1px)}
+.btn-ghost{
+  background:rgba(255,138,61,.09);
+  border-color:rgba(255,194,71,.62);
+  color:#ffd7a1;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
+}
+.btn-ghost:hover{
+  background:rgba(255,138,61,.2);
+  border-color:var(--accent-2);
+  color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 12px 24px -14px rgba(255,194,71,.85);
+}
+
+.hero-btns{gap:16px}
+.hero-btns .btn{gap:14px}
+.hero .lead{font-size:15px}
+
+.text-btn{
+  border:2px dashed rgba(255,194,71,.55);
+  border-radius:999px;
+  padding:12px 22px;
+  font-weight:800;
+  color:#ffd7a1;
+  gap:12px;
+  transition:background .18s,border-color .18s,color .18s;
+}
+.text-btn:hover{background:rgba(255,194,71,.14);border-color:var(--accent-2);color:#fff}
+.text-btn span{font-size:18px}
+
+.editorial-link{
+  font-weight:800;
+  color:var(--accent-2);
+  gap:10px;
+  border-bottom:2px solid rgba(255,194,71,.38);
+  padding-bottom:3px;
+}
+.editorial-link span{
+  display:inline-grid;
+  place-items:center;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:var(--grad);
+  color:#2b1206;
+  font-size:14px;
+  font-weight:800;
+}
+.editorial-link:hover{color:#fff;border-color:var(--accent-2)}
+
+/* ── Первый экран ────────────────────────────────────────────── */
+.live-dot{width:8px;height:8px;background:var(--accent-3);box-shadow:0 0 0 4px rgba(232,64,42,.22)}
+.hero-caption{font-weight:700;color:#e0c8ae}
+.caption-rule{height:2px;background:var(--grad);border-radius:2px}
+
+.feature{
+  border-radius:22px;
+  border:1px solid rgba(255,194,71,.28);
+  background:#2b241f;
+  box-shadow:0 34px 60px -34px rgba(0,0,0,.95);
+}
+.feature:after{
+  background:linear-gradient(0deg,rgba(18,11,7,.98) 4%,rgba(18,11,7,.6) 44%,rgba(18,11,7,.04) 78%);
+}
+.feature-top{color:#ffe6bd;font-weight:700}
+.feature-top span:first-child{border-bottom:1.5px solid rgba(255,194,71,.65);color:var(--accent-2);font-weight:800}
+.feature-info .eyebrow{color:var(--accent-2)}
+.feature-meta{color:#f2ddc4;font-weight:600}
+.feature h2 em{
+  color:var(--accent-2);
+  background:linear-gradient(135deg,#ffd66e,#ff8a3d);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.feature-link{
+  border-top:1.5px solid rgba(255,194,71,.38);
+  padding-top:14px;
+  font-weight:800;
+  letter-spacing:.03em;
+  color:#ffe6bd;
+}
+.feature-link:hover{color:var(--accent-2)}
+.feature-side{color:rgba(255,214,160,.72)}
+
+.collection-line{border-top:1px solid var(--border);font-weight:600}
+.collection-line b{color:var(--accent-2);font-size:13px}
+.collection-line .collection-note{color:var(--muted)}
+
+/* ── Блок настроений (светлый тёплый) ────────────────────────── */
+.mood-section{
+  background:linear-gradient(180deg,#fbeed8 0%,#f4e0c0 100%);
+  color:var(--ink);
+  border-block:1px solid rgba(232,64,42,.16);
+}
+.mood-section .eyebrow{color:#b04a1c}
+.mood-section .editorial-link{color:#a03c12;border-color:rgba(160,60,18,.32)}
+.mood-section .editorial-link:hover{color:#e8402a;border-color:#e8402a}
+.mood-collection{
+  border-top:2px solid rgba(232,64,42,.28);
+  border-radius:16px;
+  padding:24px 18px 20px;
+  background:rgba(255,255,255,.55);
+  box-shadow:0 14px 26px -24px rgba(90,40,10,.75);
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.mood-collection:hover{
+  transform:translateY(-6px);
+  border-top-color:var(--accent-3);
+  box-shadow:0 22px 34px -22px rgba(160,60,18,.6);
+}
+.mood-number{color:#b0602f;font-weight:800}
+.mood-collection h3{font-weight:700;color:#33190c}
+.mood-collection p{color:#7d5634;font-weight:600}
+.mood-symbol{color:var(--accent-3);font-weight:700}
+
+/* ── Карточки фильмов ────────────────────────────────────────── */
+.poster{
+  border-radius:18px;
+  border:1px solid rgba(255,194,71,.22);
+  background:#2f2721;
+  box-shadow:0 20px 32px -26px #000;
+  transition:border-color .25s,box-shadow .25s;
+}
+.card:hover .poster{
+  border-color:rgba(255,194,71,.6);
+  box-shadow:0 24px 40px -26px rgba(232,64,42,.55);
+}
+.poster-title{font-weight:700;color:#ffe9c9}
+.badge{
+  background:var(--grad);
+  color:#2b1206;
+  border-radius:999px;
+  padding:5px 12px;
+  font-weight:800;
+  box-shadow:0 8px 16px -10px rgba(232,64,42,.95);
+}
+.card h3{font-weight:700;font-size:15.5px}
+.card .meta{font-weight:600}
+.desc{font-weight:500}
+
+.actions{gap:10px;border-top:1px solid rgba(255,194,71,.18);padding-top:12px}
+.actions .btn{
+  border:1.5px solid rgba(255,194,71,.35);
+  border-radius:999px;
+  background:rgba(255,194,71,.06);
+  color:#f4dfc6;
+  padding:8px 8px;
+  font-size:10.5px;
+  font-weight:800;
+}
+.actions .btn:hover{
+  background:rgba(255,138,61,.18);
+  border-color:var(--accent);
+  color:#fff;
+  transform:translateY(-1px);
+}
+.actions .later-btn{border-right:1.5px solid rgba(255,194,71,.35);border-radius:999px}
+.later-btn.on{color:var(--accent-2);border-color:var(--accent-2);background:rgba(255,194,71,.16)}
+
+.match{height:6px;border-radius:999px;background:rgba(255,194,71,.14);overflow:hidden;margin:2px 0 12px}
+.match span{background:var(--grad);border-radius:999px}
+
+/* ── Шаги и служебные блоки ──────────────────────────────────── */
+.about-selection{border-top:1px solid var(--border)}
+.editorial-steps li{border-bottom:1px solid var(--border)}
+.editorial-steps li>span{color:var(--accent-2);font-weight:700}
+.editorial-steps h3{font-weight:700}
+.editorial-steps p{font-weight:500}
+
+.page-head{border-bottom:1px solid var(--border)}
+.crumbs{font-weight:700}
+.crumbs a:hover{color:var(--accent-2)}
+
+.panel{
+  background:linear-gradient(180deg,var(--surface) 0%,#1d1713 100%);
+  border:1px solid var(--border);
+  border-radius:20px;
+  box-shadow:0 24px 44px -36px #000;
+}
+.f-title{font-weight:800;letter-spacing:.02em}
+.input{
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  background:#1b1512;
+  padding:12px 14px;
+  font-weight:600;
+}
+.input:focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
+.input::placeholder{color:#a4907c;font-weight:600}
+input[type=range]{accent-color:var(--accent)}
+
+.chips{gap:9px}
+.chip{
+  border:1.5px solid rgba(255,194,71,.32);
+  border-radius:999px;
+  background:rgba(255,194,71,.05);
+  padding:8px 14px;
+  font-weight:700;
+  color:#f0dcc4;
+  transition:background .16s,border-color .16s,color .16s,box-shadow .16s;
+}
+.chip:hover{border-color:var(--accent-2);background:rgba(255,194,71,.14);color:#fff}
+.chip.active{
+  background:var(--grad);
+  border-color:#ffd98a;
+  color:#2b1206;
+  font-weight:800;
+  box-shadow:0 10px 20px -12px rgba(232,64,42,.95);
+}
+
+.toolbar select{color-scheme:dark}
+
+.msg{
+  border:1.5px dashed rgba(255,194,71,.4);
+  border-radius:16px;
+  background:rgba(255,194,71,.04);
+  font-weight:600;
+}
+.msg a{color:var(--accent-2)}
+.msg.error{border-color:#d95a45;color:#ffb7a6;background:rgba(232,64,42,.08)}
+.msg.warn{border-color:var(--accent-2)}
+
+/* ── Мастер подбора ──────────────────────────────────────────── */
+.progress{height:6px;border-radius:999px;background:rgba(255,194,71,.14);overflow:hidden}
+.progress span{background:var(--grad);border-radius:999px}
+.mood-box{border:1.5px solid var(--border);border-radius:16px;background:rgba(255,194,71,.04)}
+.mood-preview{color:var(--accent-2);font-weight:700}
+.mood-field{font-weight:600}
+.wiz-actions{border-top:1px solid var(--border)}
+.tag{border-radius:999px;padding:6px 12px;font-weight:700;border:1.5px solid rgba(255,194,71,.32);background:rgba(255,194,71,.05)}
+.tag.demo-label{border-color:rgba(255,194,71,.55);color:var(--accent-2);background:rgba(255,194,71,.1)}
+.source-disclaimer{border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding-left:14px;font-weight:600}
+
+/* ── Диалоги, тосты, подвал ──────────────────────────────────── */
+dialog{
+  border:1px solid rgba(255,194,71,.35);
+  border-radius:22px;
+  box-shadow:0 40px 80px -40px #000;
+}
+dialog::backdrop{background:rgba(16,9,5,.88);backdrop-filter:blur(7px)}
+dialog h3{font-weight:700}
+dialog .src a{color:var(--accent-2);font-weight:700}
+.dialog-close{
+  border:1.5px solid rgba(255,194,71,.4);
+  border-radius:999px;
+  width:36px;
+  height:36px;
+  padding:0;
+  font-weight:800;
+  transition:background .18s,border-color .18s;
+}
+.dialog-close:hover{background:rgba(255,194,71,.16);border-color:var(--accent-2)}
+
+#toast{
+  background:linear-gradient(180deg,#fff6e7,#ffe6c4);
+  color:#2a1a10;
+  border:1px solid #ffcf7a;
+  border-radius:999px;
+  font-weight:700;
+  box-shadow:0 18px 44px -18px rgba(0,0,0,.8);
+}
+
+footer{border-top:1px solid var(--border)}
+.f-cols b{font-weight:800;letter-spacing:.02em}
+.f-cols a{font-weight:600}
+.f-cols a:hover{color:var(--accent-2)}
+.footer-bottom{border-top:1px solid var(--border);font-weight:600}
+
+/* ── Крупные экраны ──────────────────────────────────────────── */
+@media(min-width:1440px){
+  .hero h1{font-size:74px}
+  .feature h2{font-size:60px}
+}
+
+/* ── Мобильные правки ────────────────────────────────────────── */
+@media(max-width:760px){
+  #site-header{position:static}
+  .btn{padding:12px 20px;font-size:12px}
+  .text-btn{padding:11px 18px}
+  .poster{border-radius:14px}
+  .mood-collection{padding:20px 16px 16px}
+  .home-grid .actions,.grid .actions{gap:8px;padding-top:10px}
+  .home-grid .actions .later-btn,.grid .actions .later-btn{border-right:1.5px solid rgba(255,194,71,.35)}
+  .actions .btn{padding:9px 6px}
+}
+@media(max-width:370px){
+  .actions .btn{font-size:9.5px;padding:8px 4px}
+}
