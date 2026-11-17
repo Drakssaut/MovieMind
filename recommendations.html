@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Рекомендации — MovieMind</title>
+<meta name="theme-color" content="#10191d">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="recommendations">
+<div id="site-header"></div>
+<main id="main-content">
+  <section class="page-head"><div class="wrap">
+    <p class="crumbs"><a href="index.html">Главная</a> / Рекомендации</p>
+    <h1>Ваши рекомендации</h1><p class="lead">Фильмы, которые лучше всего подходят под ваш выбор.</p>
+  </div></section>
+  <section class="wrap">
+    <div class="row-head">
+      <div class="chips" id="summary" aria-label="Выбранные параметры подбора"></div>
+      <!-- Ссылка получит параметры подбора в func.js -->
+      <a class="btn btn-ghost" id="changeLink" href="picker.html">Изменить подбор</a>
+    </div>
+    <div class="msg" id="noParams" hidden>Вы ещё не проходили подбор. <a class="btn btn-main" href="picker.html" style="margin-left:8px">Начать подбор</a></div>
+    <div class="msg error" id="dataError" hidden>Коллекция временно недоступна. Попробуйте обновить страницу.</div>
+    <p class="note">Оценка совпадения: 60% — выбранные жанры, 30% — демо-рейтинг, 10% — годы. Настроение и ограничения учитываются при отборе.</p>
+    <div class="msg" id="recEmpty" hidden>Под эти условия ничего не нашлось. Попробуйте расширить годы, настроение или снизить рейтинг.</div>
+    <div class="grid" id="recGrid"></div>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="data/movies.js"></script>
+<script src="data/availability.js"></script>
+<script src="func.js" defer></script>
+</body>
+</html>

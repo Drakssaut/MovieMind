@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="MovieMind — найдите кино под своё настроение и соберите список на вечер.">
+<meta name="theme-color" content="#10191d">
+<title>MovieMind — у каждого вечера своя история</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css">
+</head>
+<body data-page="index">
+<div id="site-header"></div>
+<main id="main-content">
+<section class="hero wrap" aria-labelledby="heroTitle">
+ <div class="hero-copy">
+  <p class="eyebrow"><span class="live-dot"></span> Кино. Настроение. Ваш вечер.</p>
+  <h1 id="heroTitle">Хороший вечер<br>начинается<br><em>с хорошего кино.</em></h1>
+  <p class="lead">Для тех, кто устал выбирать. Найдите историю под своё настроение — от тихой драмы до большого приключения.</p>
+  <div class="hero-btns"><a class="btn btn-main" href="picker.html">Найти свой фильм <span aria-hidden="true">↗</span></a><button class="text-btn" id="randomBtn" type="button">Довериться случаю <span aria-hidden="true">⤨</span></button></div>
+  <div class="hero-caption"><span class="caption-rule"></span> Меньше поисков. Больше историй.</div>
+ </div>
+ <article class="feature" aria-labelledby="featureTitle">
+  <img class="feature-art" src="assets/photo-1.jpg" alt="Фотография маяка на скалистом берегу под звёздным небом" fetchpriority="high" width="1200" height="1500">
+  <div class="feature-top"><span>В ФОКУСЕ</span><span>01 / 12</span></div>
+  <div class="feature-info"><p class="eyebrow">История о втором шансе</p><h2 id="featureTitle">Последний<br><em>маяк</em></h2><p class="feature-meta">2019 <span>Драма / Мелодрама</span> 7.8 <small>демо-рейтинг</small></p><button class="feature-link" id="featureBtn" type="button">Подробнее о фильме <span aria-hidden="true">↗</span></button></div>
+  <span class="feature-side">MOVIEMIND / PHOTOGRAPHY / CASEY HORNER</span>
+ </article>
+</section>
+<div class="collection-line wrap"><span>Небольшая коллекция. Большие истории.</span><div><b id="statMovies">12</b> фильмов <span aria-hidden="true">/</span> <b id="statGenres">6</b> жанров <span class="collection-note">Демонстрационная коллекция</span></div></div>
+<section class="mood-section" aria-labelledby="moodHeading"><div class="wrap">
+ <div class="row-head"><div><p class="eyebrow">НАЧНИТЕ С ОЩУЩЕНИЯ</p><h2 id="moodHeading">Какой у вас сегодня вечер?</h2></div><a class="editorial-link" href="picker.html">Настроить подбор <span aria-hidden="true">↗</span></a></div>
+ <div class="mood-collections">
+  <a class="mood-collection" href="catalog.html?genre=драма&amp;moodFrom=1&amp;moodTo=4"><span class="mood-number">01</span><div><h3>Побыть в тишине</h3><p>Истории, которые остаются с вами.</p></div><span class="mood-symbol" aria-hidden="true">☾</span></a>
+  <a class="mood-collection" href="catalog.html?genre=комедия&amp;moodFrom=7&amp;moodTo=10"><span class="mood-number">02</span><div><h3>Стать чуть счастливее</h3><p>Тёплое кино без лишней драмы.</p></div><span class="mood-symbol" aria-hidden="true">✳</span></a>
+  <a class="mood-collection" href="catalog.html?genre=приключения"><span class="mood-number">03</span><div><h3>Сменить обстановку</h3><p>Большой мир за пределами комнаты.</p></div><span class="mood-symbol" aria-hidden="true">↗</span></a>
+ </div>
+</div></section>
+<section class="wrap selection-section" aria-labelledby="selectionHeading">
+ <div class="row-head"><div><p class="eyebrow">СТОИТ ПРИСМОТРЕТЬСЯ</p><h2 id="selectionHeading">На первом ряду</h2></div><div class="selection-nav"><span>По демо-рейтингу</span><a class="editorial-link" href="catalog.html">Весь каталог <span aria-hidden="true">↗</span></a></div></div>
+ <div class="home-grid" id="topRow"></div>
+</section>
+<section class="wrap about-selection" aria-labelledby="aboutHeading">
+ <div><p class="eyebrow">БЕЗ БЕСКОНЕЧНОГО СКРОЛЛА</p><h2 id="aboutHeading">Выбирайте не дольше,<br>чем греется <em>попкорн.</em></h2><a class="editorial-link" href="picker.html">Попробовать подбор <span aria-hidden="true">↗</span></a></div>
+ <ol class="editorial-steps"><li><span>01</span><div><h3>Обозначьте жанр</h3><p>Можно выбрать несколько. Остальное уточним.</p></div></li><li><span>02</span><div><h3>Поймайте настроение</h3><p>Задайте годы, рейтинг и эмоциональный диапазон.</p></div></li><li><span>03</span><div><h3>Оставьте лучшее на вечер</h3><p>Сохраните находки в свой список «Посмотреть позже».</p></div></li></ol>
+</section>
+</main>
+<div id="site-footer"></div>
+<script src="data/movies.js"></script><script src="data/availability.js"></script><script src="func.js" defer></script>
+</body></html>
