@@ -4,14 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Каталог — MovieMind</title>
+<meta name="theme-color" content="#10191d">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
 </head>
 <body data-page="catalog">
 <div id="site-header"></div>
-<main>
+<main id="main-content">
   <section class="page-head"><div class="wrap">
     <p class="crumbs"><a href="index.html">Главная</a> / Каталог</p>
-    <h1>Каталог фильмов</h1><p class="lead">Ищи по названию и сужай выбор фильтрами.</p>
+    <h1>Каталог фильмов</h1><p class="lead">Ваша следующая история — где-то здесь. Ищите по названию или доверьтесь настроению.</p><p class="note">Демонстрационная коллекция: вымышленные фильмы и рейтинги.</p>
   </div></section>
   <section class="wrap">
     <div class="layout">
@@ -24,13 +26,13 @@
       </aside>
       <div>
         <div class="toolbar">
-          <button class="btn btn-ghost" id="filtersBtn" type="button">Фильтры</button>
+          <button class="btn btn-ghost" id="filtersBtn" type="button" aria-expanded="false" aria-controls="filters">Фильтры</button>
           <input id="searchInput" class="input" type="search" placeholder="Поиск по названию…" aria-label="Поиск по названию">
           <select id="sortSelect" class="input" aria-label="Сортировка"><option value="rating">По рейтингу</option><option value="year">По году</option><option value="title">По названию</option></select>
         </div>
         <p class="meta" role="status">Найдено: <b id="foundCount">0</b></p>
         <div class="msg warn" id="storageWarn" hidden>Браузер не даёт сохранять данные: список «Посмотреть позже» будет работать только до закрытия страницы.</div>
-        <div class="msg error" id="dataError" hidden>Не удалось загрузить каталог. Проверьте файл data/movies.js.</div>
+        <div class="msg error" id="dataError" hidden>Коллекция временно недоступна. Попробуйте обновить страницу.</div>
         <div class="msg" id="emptyMsg" hidden>Ничего не найдено. Попробуйте изменить условия поиска.</div>
         <div class="grid" id="grid"></div>
         <p style="text-align:center"><button class="btn btn-ghost" id="moreBtn" type="button" hidden>Показать ещё</button></p>

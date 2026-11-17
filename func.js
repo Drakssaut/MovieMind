@@ -41,47 +41,69 @@ function moodText(v) { return v <= 2 ? "Очень грустное" : v <= 4 ? 
 // ---------- Общая шапка и подвал (одинаковые на всех страницах) ----------
 function renderLayout() {
   const page = document.body.dataset.page;
-  const links = PAGES.map((p) =>
-    '<a href="' + p[0] + '.html"' + (p[0] === page ? ' class="active"' : "") + ">" + p[1] +
-    (p[0] === "later" ? ' <span id="laterCount" class="count">0</span>' : "") + "</a>").join("");
-  $("site-header").innerHTML =
-    '<header class="header"><div class="wrap header-in">' +
-    '<a href="index.html" class="logo" aria-label="MovieMind, на главную"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFC72C"/><stop offset=".6" stop-color="#FF8C1A"/><stop offset="1" stop-color="#E63946"/></linearGradient></defs><circle cx="12" cy="12" r="11" fill="url(#lg)"/><path d="M10 7.5v9l7-4.5z" fill="#1a1205"/></svg>MovieMind</a>' +
-    '<nav aria-label="Основное меню">' + links + "</nav>" +
-    '<form class="quick" id="quickForm"><input id="quickSearch" class="input" type="search" placeholder="Поиск фильма…" aria-label="Быстрый поиск по названию"></form></div></header>';
-  $("site-footer").innerHTML =
-    '<footer><div class="wrap f-cols"><div><b>MovieMind</b><br>Учебный проект ГУАП · группа 4615.<br>Сведения о том, где можно посмотреть фильм, вносятся вручную и могут устаревать.</div>' +
-    '<div><b>Страницы</b><a href="catalog.html">Каталог</a><a href="picker.html">Подбор</a><a href="recommendations.html">Рекомендации</a></div>' +
-    '<div><b>Мои фильмы</b><a href="later.html">Посмотреть позже</a><a href="index.html">На главную</a></div></div></footer>';
-  document.body.insertAdjacentHTML("beforeend",
-    '<dialog id="whereDialog" aria-labelledby="whereTitle"><h3 id="whereTitle" style="margin-top:0"></h3><div id="whereBody"></div><p class="note" id="whereNote"></p>' +
-    '<button class="btn btn-main" id="whereClose" type="button" style="margin-top:12px">Закрыть</button></dialog><div id="toast" role="status"></div>');
+  const links = PAGES.map(([id, title]) => '<a href="' + id + '.html"' +
+    (id === page ? ' class="active" aria-current="page"' : '') + '>' + title +
+    (id === "later" ? ' <span id="laterCount" class="count">0</span>' : '') + '</a>').join('');
+  document.body.insertAdjacentHTML("afterbegin", '<a class="skip-link" href="#main-content">К содержимому</a>');
+  $("site-header").innerHTML = '<header class="header"><div class="wrap header-in">' +
+    '<a href="index.html" class="logo" aria-label="MovieMind, на главную"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect x="3" y="3" width="26" height="26" rx="2" stroke="currentColor"/><path d="m13 10 10 6-10 6z" fill="currentColor"/><path d="M3 8h4M3 16h4M3 24h4M25 8h4M25 16h4M25 24h4" stroke="currentColor"/></svg>MovieMind</a>' +
+    '<nav aria-label="Основное меню">' + links + '</nav>' +
+    '<form class="quick" id="quickForm" role="search"><input id="quickSearch" class="input" type="search" placeholder="Найти историю ↗" aria-label="Поиск фильма по названию"></form></div></header>';
+  $("site-footer").innerHTML = '<footer><div class="wrap f-cols"><div><b>MovieMind / Кино по настроению</b><p>Учебный проект ГУАП · группа 4615.<br>Небольшое место для больших историй.</p><p>Сейчас в коллекции вымышленные фильмы и демо-рейтинги. Фотографии: Unsplash / Pexels. Это тематические обложки демонстрационных фильмов. Сведения о просмотре — тестовые, не подтверждают реальную доступность.</p></div><div><b>Открыть новое</b><a href="catalog.html">Каталог</a><a href="picker.html">Подбор фильма</a><a href="recommendations.html">Рекомендации</a></div><div><b>Ваш вечер</b><a href="later.html">Посмотреть позже</a><a href="index.html">На главную</a></div></div><div class="wrap footer-bottom"><span>MOVIEMIND · У КАЖДОГО ВЕЧЕРА СВОЯ ИСТОРИЯ</span><span>Демонстрационная коллекция / 2026</span></div></footer>';
+  document.body.insertAdjacentHTML("beforeend", '<dialog id="whereDialog" aria-labelledby="whereTitle"><h3 id="whereTitle"></h3><div id="whereBody"></div><p class="note" id="whereNote"></p><button class="btn btn-main" id="whereClose" type="button">Закрыть</button></dialog><dialog id="movieDialog" aria-labelledby="movieTitle"><button class="dialog-close" id="movieClose" type="button" aria-label="Закрыть описание фильма">×</button><div id="movieBody"></div></dialog><div id="toast" role="status"></div>');
   $("whereClose").onclick = () => $("whereDialog").close();
-  $("whereDialog").addEventListener("click", (e) => { if (e.target === $("whereDialog")) $("whereDialog").close(); });
-  // быстрый поиск: переход в каталог
-  $("quickForm").onsubmit = (e) => {
-    e.preventDefault();
-    location.href = "catalog.html?q=" + encodeURIComponent($("quickSearch").value.trim());
-  };
+  $("movieClose").onclick = () => $("movieDialog").close();
+  [$("whereDialog"), $("movieDialog")].forEach(dialog => dialog.addEventListener("click", e => {
+    const r = dialog.getBoundingClientRect();
+    if (e.target === dialog && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) dialog.close();
+  }));
+  $("quickForm").onsubmit = e => { e.preventDefault(); location.href = "catalog.html?q=" + encodeURIComponent($("quickSearch").value.trim()); };
+}
+
+function showMovieDetails(id) {
+  const movie = MOVIES.find(m => m.id === id);
+  if (!movie) return;
+  const body = $("movieBody"); body.replaceChildren();
+  const detail = el("div", "movie-detail");
+  const img = el("img", "detail-poster"); img.src = movie.posterUrl || "assets/photo-12.jpg"; img.alt = "Тематическая фотография к фильму «" + movie.title + "»";
+  const copy = el("div", "detail-copy");
+  copy.appendChild(el("span", "tag demo-label", "Демонстрационный фильм"));
+  const title = el("h3", "", movie.title); title.id = "movieTitle"; copy.appendChild(title);
+  copy.appendChild(el("p", "meta", [movie.year, splitGenres(movie).join(" / ")].filter(Boolean).join(" · ")));
+  copy.appendChild(el("p", "meta", "Демо-рейтинг: " + (Number.isFinite(movie.rating) ? movie.rating.toFixed(1) + " / 10" : "нет данных")));
+  copy.appendChild(el("p", "", movie.description || "Описание появится позже."));
+  if (Number.isFinite(movie.mood)) copy.appendChild(el("p", "meta", "Настроение: " + moodText(movie.mood) + " · " + movie.mood + "/10"));
+  const actions = el("div", "actions");
+  const save = el("button", "btn btn-ghost later-btn"); save.type = "button"; save.dataset.id = id; updateLaterButton(save); save.onclick = () => toggleWatchLater(id);
+  const where = el("button", "btn btn-ghost", "Где посмотреть"); where.type = "button";
+  where.onclick = () => { $("movieDialog").close(); showWhereToWatch(id); };
+  actions.append(save, where); copy.appendChild(actions); detail.append(img, copy); body.appendChild(detail);
+  $("movieDialog").showModal();
 }
 
 // ---------- Карточки ----------
 function createCard(movie, matchPercent) {
   const card = el("article", "card");
-  const poster = el("div", "poster p" + (movie.id % 4));
+  const poster = el("button", "poster poster-button");
+  poster.type = "button";
+  poster.setAttribute("aria-label", "Подробнее: " + movie.title);
+  poster.onclick = () => showMovieDetails(movie.id);
   if (movie.posterUrl) {
     const img = el("img");
     img.src = movie.posterUrl; img.alt = ""; img.loading = "lazy";
     img.onerror = () => img.remove();
     poster.appendChild(img);
   }
-  poster.appendChild(el("span", "", movie.title ? movie.title.charAt(0).toUpperCase() : "?"));
+  poster.appendChild(el("span", "poster-title", movie.title || "Без названия"));
   poster.appendChild(el("span", "badge", typeof movie.rating === "number" ? movie.rating.toFixed(1) : "—"));
   if (typeof movie.mood === "number") poster.appendChild(el("span", "mood", FACES[movie.mood - 1] + " " + movie.mood + "/10"));
   card.appendChild(poster);
 
   const body = el("div", "card-body");
-  body.appendChild(el("h3", "", movie.title || "Без названия"));
+  const heading = el("h3");
+  const titleBtn = el("button", "detail-launch", movie.title || "Без названия");
+  titleBtn.type = "button"; titleBtn.onclick = () => showMovieDetails(movie.id);
+  heading.appendChild(titleBtn); body.appendChild(heading);
   body.appendChild(el("p", "meta", (movie.year || "год: нет данных") + " · " + (splitGenres(movie).join(", ") || "жанр: нет данных")));
   body.appendChild(el("p", "desc", movie.description || "нет данных"));
   if (matchPercent !== undefined) {
@@ -125,7 +147,7 @@ function showMore() {
 function loadWatchLater() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    watchLater = Array.isArray(saved) ? saved : [];
+    watchLater = Array.isArray(saved) ? [...new Set(saved.filter(id => Number.isInteger(id) && MOVIES.some(m => m.id === id)))] : [];
   } catch (e) { watchLater = []; }
 }
 function saveWatchLater() {
@@ -135,7 +157,8 @@ function saveWatchLater() {
 function updateLaterButton(btn) {
   const on = watchLater.includes(Number(btn.dataset.id));
   btn.classList.toggle("on", on);
-  btn.textContent = on ? "♥ В списке" : "♡ Позже";
+  btn.textContent = on ? "✓ В списке" : "+ В список";
+  btn.setAttribute("aria-label", (on ? "Убрать из списка: " : "Сохранить на потом: ") + (MOVIES.find(m => m.id === Number(btn.dataset.id))?.title || "фильм"));
   btn.setAttribute("aria-pressed", on);
 }
 function toggleWatchLater(id) {
@@ -143,6 +166,7 @@ function toggleWatchLater(id) {
   if (i === -1) watchLater.push(id); else watchLater.splice(i, 1);
   saveWatchLater();
   refreshLater();
+  showMessage(i === -1 ? "Фильм сохранён на вечер" : "Фильм удалён из списка");
 }
 function refreshLater() {
   document.querySelectorAll(".later-btn").forEach(updateLaterButton);
@@ -164,13 +188,14 @@ function showWhereToWatch(id) {
   body.innerHTML = "";
   $("whereTitle").textContent = movie && movie.title ? movie.title : "Где посмотреть";
   let list = [];
-  if (russian.length) { body.appendChild(el("p", "", "Доступен на российских платформах:")); list = russian; }
-  else if (other.length) { body.appendChild(el("p", "", "На российских платформах фильм не найден. Можно посмотреть на другом сайте:")); list = other; }
+  body.appendChild(el("p", "source-disclaimer", "Демонстрационные сведения. Ссылки тестовые: наличие фильма на сервисе не проверено."));
+  if (russian.length) { body.appendChild(el("p", "", "Примеры платформ из демо-данных:")); list = russian; }
+  else if (other.length) { body.appendChild(el("p", "", "Другие источники из демо-данных (не ссылка на конкретный фильм):")); list = other; }
   else body.appendChild(el("p", "", "Сведения о доступности не найдены."));
   list.forEach((r) => {
     const row = el("div", "src");
     row.appendChild(el("span", "tag", r.sourceName || "источник"));
-    if (r.url && String(r.url).startsWith("http")) {
+    if (/^https?:\/\//i.test(String(r.url || ""))) {
       const a = el("a", "", "Перейти");
       a.href = r.url; a.target = "_blank"; a.rel = "noopener";
       row.appendChild(a);
@@ -178,26 +203,43 @@ function showWhereToWatch(id) {
     body.appendChild(row);
   });
   const dates = records.map((r) => r.checkedDate).filter(Boolean).sort();
-  $("whereNote").textContent = "Сведения проверены: " + (dates.length ? dates[dates.length - 1] : "нет данных") + ". Доступность может измениться.";
+  $("whereNote").textContent = "Дата записи в демо-данных: " + (dates.length ? dates[dates.length - 1] : "нет данных") + ". Доступность может измениться.";
   $("whereDialog").showModal();
 }
 
-// ---------- Заготовки: логику допишем на следующем этапе ----------
-function searchByTitle(text) { /* TODO: вернуть фильмы, в названии которых есть text (без учёта регистра) */ return MOVIES; }
-function applyFilters(prefs) {
-  // TODO: поиск (#searchInput), жанры, годы, рейтинг и настроение.
-  // Обязательно учесть prefs.moodFrom и prefs.moodTo наравне с остальными фильтрами:
-  // если диапазон настроения отличается от 1–10, фильмы без поля mood в выборку не попадают.
-  return MOVIES.slice();
+// ---------- Поиск, фильтры и прозрачная оценка совпадения ----------
+function searchByTitle(text) {
+  const query = String(text || "").trim().toLocaleLowerCase("ru").replaceAll("ё", "е");
+  return MOVIES.filter(m => String(m.title || "").toLocaleLowerCase("ru").replaceAll("ё", "е").includes(query));
 }
-function sortMovies(list) { /* TODO: сортировка по #sortSelect (rating, year, title) */ return list; }
-function calcMatch(movie, prefs) { /* TODO: S = 0,6·G + 0,3·R + 0,1·Y из ТЗ, в процентах; учесть prefs.moodFrom и prefs.moodTo */ return 0; }
-function pickRandomMovie() { /* TODO: случайный фильм */ showMessage("Случайный фильм появится на следующем этапе"); }
+function filterMovies(list, prefs) {
+  const moodActive = prefs.moodFrom > 1 || prefs.moodTo < 10;
+  return list.filter(m => (!prefs.genres?.length || prefs.genres.some(g => splitGenres(m).includes(g))) &&
+    (!prefs.yearFrom || m.year >= prefs.yearFrom) && (!prefs.yearTo || m.year <= prefs.yearTo) &&
+    (!prefs.ratingMin || (Number.isFinite(m.rating) && m.rating >= prefs.ratingMin)) &&
+    (!moodActive || (Number.isFinite(m.mood) && m.mood >= prefs.moodFrom && m.mood <= prefs.moodTo)));
+}
+function applyFilters(prefs) { return filterMovies(searchByTitle($("searchInput")?.value || ""), prefs); }
+function sortMovies(list, mode = $("sortSelect")?.value || "rating") {
+  return list.slice().sort((a, b) => mode === "title" ? String(a.title).localeCompare(String(b.title), "ru") :
+    mode === "year" ? (b.year || 0) - (a.year || 0) : (b.rating ?? -1) - (a.rating ?? -1));
+}
+function calcMatch(movie, prefs) {
+  const genre = prefs.genres?.length ? prefs.genres.filter(g => splitGenres(movie).includes(g)).length / prefs.genres.length : 1;
+  const rating = Number.isFinite(movie.rating) ? Math.min(10, Math.max(0, movie.rating)) / 10 : 0;
+  const year = (!prefs.yearFrom || movie.year >= prefs.yearFrom) && (!prefs.yearTo || movie.year <= prefs.yearTo) ? 1 : 0;
+  return Math.round(100 * (.6 * genre + .3 * rating + .1 * year));
+}
+function pickRandomMovie() {
+  if (!MOVIES.length) { showMessage("Коллекция пока пуста"); return; }
+  showMovieDetails(MOVIES[Math.floor(Math.random() * MOVIES.length)].id);
+}
 function recommend(prefs) {
-  // TODO: отобрать до 10 фильмов по calcMatch(movie, prefs). Пока демо-подборка.
-  // В prefs уже есть поля moodFrom и moodTo — при отборе их тоже нужно учитывать.
-  $("recGrid").innerHTML = "";
-  MOVIES.slice(0, 10).forEach((m, i) => $("recGrid").appendChild(createCard(m, 95 - i * 6)));
+  $("recGrid").replaceChildren();
+  const list = filterMovies(MOVIES, prefs).map(movie => ({movie, score: calcMatch(movie, prefs)}))
+    .sort((a, b) => b.score - a.score || (b.movie.rating || 0) - (a.movie.rating || 0)).slice(0, 10);
+  $("recEmpty").hidden = list.length > 0;
+  list.forEach(({movie, score}) => $("recGrid").appendChild(createCard(movie, score)));
 }
 
 // ---------- Единый набор фильтров ----------
@@ -303,16 +345,9 @@ function initIndex() {
   if (!loadData()) return;
   $("statMovies").textContent = MOVIES.length;
   $("statGenres").textContent = getAllGenres().length;
-  $("statSources").textContent = new Set(getAvailability().map((r) => r.sourceName)).size;
-  const top = MOVIES.filter((m) => typeof m.rating === "number").sort((a, b) => b.rating - a.rating);
-  top.slice(0, 3).forEach((m, i) => {
-    const mini = el("div", "mini m" + i + " p" + (m.id % 4));
-    mini.appendChild(el("span", "", m.title));
-    mini.appendChild(el("small", "", m.year + " · ★ " + m.rating.toFixed(1)));
-    $("heroStack").appendChild(mini);
-  });
-  top.slice(0, 8).forEach((m) => $("topRow").appendChild(createCard(m)));
+  sortMovies(MOVIES).slice(0, 4).forEach(m => $("topRow").appendChild(createCard(m)));
   $("randomBtn").onclick = pickRandomMovie;
+  $("featureBtn").onclick = () => showMovieDetails(1);
 }
 
 function initCatalog() {
@@ -321,7 +356,7 @@ function initCatalog() {
     const prefs = readFilters();
     renderCatalog(sortMovies(applyFilters(prefs)));
   };
-  $("filtersBtn").onclick = () => $("filters").classList.toggle("open");
+  $("filtersBtn").onclick = () => { const open = $("filters").classList.toggle("open"); $("filtersBtn").setAttribute("aria-expanded", String(open)); };
   $("moreBtn").onclick = showMore;
   $("sortSelect").onchange = refresh;
   $("searchInput").oninput = refresh;
@@ -339,7 +374,16 @@ function initCatalog() {
   if (!loadData()) { $("dataError").hidden = false; return; }
   fillChips("genreChips", getAllGenres(), refresh);
   renderFilters("paramsBox", refresh);
-  $("searchInput").value = new URLSearchParams(location.search).get("q") || "";
+  const params = new URLSearchParams(location.search);
+  $("searchInput").value = params.get("q") || "";
+  document.querySelectorAll("#genreChips .chip").forEach(chip => {
+    if (chip.textContent === params.get("genre")) { chip.classList.add("active"); chip.setAttribute("aria-pressed", "true"); }
+  });
+  ["moodFrom", "moodTo"].forEach(id => {
+    const value = Number(params.get(id));
+    if (Number.isInteger(value) && value >= 1 && value <= 10) $(id).value = value;
+  });
+  updateMoodPreview();
   refresh();
 }
 
@@ -393,6 +437,7 @@ function initPicker() {
     // Шаг 2: проверяем годы и диапазон настроения.
     const f = readFilters();
     if (f.yearFrom && f.yearTo && f.yearFrom > f.yearTo) { showMessage("Год «от» не может быть больше года «до»"); return; }
+    if (![f.moodFrom, f.moodTo].every(v => Number.isInteger(v) && v >= 1 && v <= 10)) { showMessage("Настроение — целое число от 1 до 10"); return; }
     if (f.moodFrom > f.moodTo) { showMessage("Настроение «от» не может быть больше «до»"); return; }
     // Передаём все параметры через адрес страницы рекомендаций.
     const p = new URLSearchParams({
@@ -435,6 +480,10 @@ function initRecommendations() {
   $("summary").appendChild(el("span", "tag", "Настроение: " + moodRangeText(prefs.moodFrom, prefs.moodTo)));
   if (prefs.ratingMin) $("summary").appendChild(el("span", "tag", "Рейтинг от " + prefs.ratingMin));
   if (prefs.yearFrom || prefs.yearTo) $("summary").appendChild(el("span", "tag", "Годы: " + (prefs.yearFrom || "…") + "–" + (prefs.yearTo || "…")));
+  const validMood = [prefs.moodFrom, prefs.moodTo].every(v => Number.isInteger(v) && v >= 1 && v <= 10) && prefs.moodFrom <= prefs.moodTo;
+  if (!validMood || (prefs.yearFrom && prefs.yearTo && prefs.yearFrom > prefs.yearTo)) {
+    $("recEmpty").textContent = "Некорректные параметры. Измените подбор."; $("recEmpty").hidden = false; return;
+  }
   recommend(prefs);
 }
 

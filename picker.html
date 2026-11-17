@@ -4,11 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Подбор фильма — MovieMind</title>
+<meta name="theme-color" content="#10191d">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
 </head>
 <body data-page="picker">
 <div id="site-header"></div>
-<main>
+<main id="main-content">
   <section class="page-head"><div class="wrap">
     <p class="crumbs"><a href="index.html">Главная</a> / Подбор</p>
     <h1>Подбор фильма</h1><p class="lead">Два шага, и подборка готова.</p>
@@ -38,7 +40,7 @@
         <button class="btn btn-main" id="nextBtn" type="button">Далее</button>
       </div>
     </div>
-    <div class="msg error" id="dataError" hidden>Не удалось загрузить каталог. Проверьте файл data/movies.js.</div>
+    <div class="msg error" id="dataError" hidden>Коллекция временно недоступна. Попробуйте обновить страницу.</div>
   </section>
 </main>
 <div id="site-footer"></div>
