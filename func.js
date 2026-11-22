@@ -49,7 +49,7 @@ function renderLayout() {
     '<a href="index.html" class="logo" aria-label="MovieMind, на главную"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect x="3" y="3" width="26" height="26" rx="2" stroke="currentColor"/><path d="m13 10 10 6-10 6z" fill="currentColor"/><path d="M3 8h4M3 16h4M3 24h4M25 8h4M25 16h4M25 24h4" stroke="currentColor"/></svg>MovieMind</a>' +
     '<nav aria-label="Основное меню">' + links + '</nav>' +
     '<form class="quick" id="quickForm" role="search"><input id="quickSearch" class="input" type="search" placeholder="Найти историю ↗" aria-label="Поиск фильма по названию"></form></div></header>';
-  $("site-footer").innerHTML = '<footer><div class="wrap f-cols"><div><b>MovieMind / Кино по настроению</b><p>Учебный проект ГУАП · группа 4615.<br>Небольшое место для больших историй.</p><p>Сейчас в коллекции вымышленные фильмы и демо-рейтинги. Фотографии: Unsplash / Pexels. Это тематические обложки демонстрационных фильмов. Сведения о просмотре — тестовые, не подтверждают реальную доступность.</p></div><div><b>Открыть новое</b><a href="catalog.html">Каталог</a><a href="picker.html">Подбор фильма</a><a href="recommendations.html">Рекомендации</a></div><div><b>Ваш вечер</b><a href="later.html">Посмотреть позже</a><a href="index.html">На главную</a></div></div><div class="wrap footer-bottom"><span>MOVIEMIND · У КАЖДОГО ВЕЧЕРА СВОЯ ИСТОРИЯ</span><span>Демонстрационная коллекция / 2026</span></div></footer>';
+  $("site-footer").innerHTML = '<footer><div class="wrap f-cols"><div><b>MovieMind / Кино по настроению</b><p>Учебный проект ГУАП · группа 4615.<br>Небольшое место для больших историй.</p><p>В коллекции фильмы из списка «500 лучших фильмов» Кинопоиска: название, год, жанр, рейтинг и постеры — оттуда же. Настроение — наша оценка по жанру. Фото на главной: Unsplash / Pexels.</p></div><div><b>Открыть новое</b><a href="catalog.html">Каталог</a><a href="picker.html">Подбор фильма</a><a href="recommendations.html">Рекомендации</a></div><div><b>Ваш вечер</b><a href="later.html">Посмотреть позже</a><a href="index.html">На главную</a></div></div><div class="wrap footer-bottom"><span>MOVIEMIND · У КАЖДОГО ВЕЧЕРА СВОЯ ИСТОРИЯ</span><span>Топ-500 Кинопоиска / 2026</span></div></footer>';
   document.body.insertAdjacentHTML("beforeend", '<dialog id="whereDialog" aria-labelledby="whereTitle"><h3 id="whereTitle"></h3><div id="whereBody"></div><p class="note" id="whereNote"></p><button class="btn btn-main" id="whereClose" type="button">Закрыть</button></dialog><dialog id="movieDialog" aria-labelledby="movieTitle"><button class="dialog-close" id="movieClose" type="button" aria-label="Закрыть описание фильма">×</button><div id="movieBody"></div></dialog><div id="toast" role="status"></div>');
   $("whereClose").onclick = () => $("whereDialog").close();
   $("movieClose").onclick = () => $("movieDialog").close();
@@ -65,20 +65,28 @@ function showMovieDetails(id) {
   if (!movie) return;
   const body = $("movieBody"); body.replaceChildren();
   const detail = el("div", "movie-detail");
-  const img = el("img", "detail-poster"); img.src = movie.posterUrl || "assets/photo-12.jpg"; img.alt = "Тематическая фотография к фильму «" + movie.title + "»";
+  const img = el("img", "detail-poster"); if (movie.posterUrl) img.src = movie.posterUrl; img.alt = "Постер фильма «" + movie.title + "»"; img.onerror = () => posterFallback(img, movie);
   const copy = el("div", "detail-copy");
-  copy.appendChild(el("span", "tag demo-label", "Демонстрационный фильм"));
+  copy.appendChild(el("span", "tag demo-label", "Топ-500 Кинопоиска"));
   const title = el("h3", "", movie.title); title.id = "movieTitle"; copy.appendChild(title);
   copy.appendChild(el("p", "meta", [movie.year, splitGenres(movie).join(" / ")].filter(Boolean).join(" · ")));
-  copy.appendChild(el("p", "meta", "Демо-рейтинг: " + (Number.isFinite(movie.rating) ? movie.rating.toFixed(1) + " / 10" : "нет данных")));
+  copy.appendChild(el("p", "meta", "Рейтинг Кинопоиска: " + (Number.isFinite(movie.rating) ? movie.rating.toFixed(1) + " / 10" : "нет данных")));
   copy.appendChild(el("p", "", movie.description || "Описание появится позже."));
-  if (Number.isFinite(movie.mood)) copy.appendChild(el("p", "meta", "Настроение: " + moodText(movie.mood) + " · " + movie.mood + "/10"));
+  if (Number.isFinite(movie.mood)) copy.appendChild(el("p", "meta", "Настроение (оценка по жанру): " + moodText(movie.mood) + " · " + movie.mood + "/10"));
   const actions = el("div", "actions");
   const save = el("button", "btn btn-ghost later-btn"); save.type = "button"; save.dataset.id = id; updateLaterButton(save); save.onclick = () => toggleWatchLater(id);
   const where = el("button", "btn btn-ghost", "Где посмотреть"); where.type = "button";
   where.onclick = () => { $("movieDialog").close(); showWhereToWatch(id); };
   actions.append(save, where); copy.appendChild(actions); detail.append(img, copy); body.appendChild(detail);
   $("movieDialog").showModal();
+}
+
+// Если постер нужного размера не загрузился — пробуем оригинал, потом убираем картинку.
+function posterFallback(img, movie) {
+  if (movie.poster && typeof POSTER_BASE !== "undefined" && !img.dataset.retry) {
+    img.dataset.retry = "1";
+    img.src = POSTER_BASE + movie.poster + "/orig";
+  } else img.remove();
 }
 
 // ---------- Карточки ----------
@@ -91,7 +99,7 @@ function createCard(movie, matchPercent) {
   if (movie.posterUrl) {
     const img = el("img");
     img.src = movie.posterUrl; img.alt = ""; img.loading = "lazy";
-    img.onerror = () => img.remove();
+    img.onerror = () => posterFallback(img, movie);
     poster.appendChild(img);
   }
   poster.appendChild(el("span", "poster-title", movie.title || "Без названия"));
@@ -188,9 +196,9 @@ function showWhereToWatch(id) {
   body.innerHTML = "";
   $("whereTitle").textContent = movie && movie.title ? movie.title : "Где посмотреть";
   let list = [];
-  body.appendChild(el("p", "source-disclaimer", "Демонстрационные сведения. Ссылки тестовые: наличие фильма на сервисе не проверено."));
-  if (russian.length) { body.appendChild(el("p", "", "Примеры платформ из демо-данных:")); list = russian; }
-  else if (other.length) { body.appendChild(el("p", "", "Другие источники из демо-данных (не ссылка на конкретный фильм):")); list = other; }
+  body.appendChild(el("p", "source-disclaimer", "Ссылки взяты со страницы списка «500 лучших фильмов» на Кинопоиске. Другие сервисы не проверялись."));
+  if (russian.length) { body.appendChild(el("p", "", "Можно смотреть на платформе (по данным Кинопоиска):")); list = russian; }
+  else if (other.length) { body.appendChild(el("p", "", "Страница фильма на Кинопоиске (там указано, где его можно посмотреть):")); list = other; }
   else body.appendChild(el("p", "", "Сведения о доступности не найдены."));
   list.forEach((r) => {
     const row = el("div", "src");
@@ -203,7 +211,7 @@ function showWhereToWatch(id) {
     body.appendChild(row);
   });
   const dates = records.map((r) => r.checkedDate).filter(Boolean).sort();
-  $("whereNote").textContent = "Дата записи в демо-данных: " + (dates.length ? dates[dates.length - 1] : "нет данных") + ". Доступность может измениться.";
+  $("whereNote").textContent = "Дата проверки: " + (dates.length ? dates[dates.length - 1] : "нет данных") + ". Доступность может измениться.";
   $("whereDialog").showModal();
 }
 
@@ -347,7 +355,7 @@ function initIndex() {
   $("statGenres").textContent = getAllGenres().length;
   sortMovies(MOVIES).slice(0, 4).forEach(m => $("topRow").appendChild(createCard(m)));
   $("randomBtn").onclick = pickRandomMovie;
-  $("featureBtn").onclick = () => showMovieDetails(1);
+  $("featureBtn").onclick = () => { location.href = "picker.html"; };
 }
 
 function initCatalog() {
