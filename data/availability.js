@@ -3,7 +3,8 @@
 // status: "available" — доступен, "unavailable" — недоступен. checkedDate — дата проверки (ГГГГ-ММ-ДД).
 // 1) «Кинопоиск HD» — прямая ссылка на фильм, только там, где на странице списка была кнопка «Смотреть» (с подпиской Яндекс Плюс).
 // 2) «Кинопоиск (страница фильма)» — страница самого фильма, id взят из ссылки списка. Она не гарантирует просмотр.
-// Для остальных сервисов (Иви, Okko, Wink, VK Видео и т.д.) сведения НЕ проверялись и не добавлены.
+// Для остальных сервисов (Иви, Okko, Wink и т.д.) сведения НЕ проверялись и не добавлены.
+// Поисковая ссылка на VK Видео не хранится здесь: она собирается в func.js из названия и года.
 const AVAILABILITY = [
   { movieId: 44168, sourceName: "Кинопоиск HD", sourceType: "platform", status: "available", url: "https://hd.kinopoisk.ru/film/41b7a3248bca8b40b66079ea65f4dae3", checkedDate: "2026-11-19" },
   { movieId: 42782, sourceName: "Кинопоиск HD", sourceType: "platform", status: "available", url: "https://hd.kinopoisk.ru/film/4212be238fbf9f488dad28df6ddd60a9", checkedDate: "2026-11-19" },
