@@ -187,6 +187,23 @@ function refreshLater() {
 }
 
 // ---------- Где посмотреть ----------
+// Поисковые ссылки на внешние сервисы. Это не прямые страницы фильмов: открывается поиск
+// по названию и году, результат зависит от самого сервиса и может не найтись.
+const SEARCH_SOURCES = [
+  { name: "VK Видео", url: (m) => "https://vkvideo.ru/search?q=" + encodeURIComponent([m.title, m.year].filter(Boolean).join(" ")) }
+];
+
+function appendSourceRow(body, sourceName, url) {
+  const row = el("div", "src");
+  row.appendChild(el("span", "tag", sourceName || "источник"));
+  if (/^https?:\/\//i.test(String(url || ""))) {
+    const a = el("a", "", "Перейти");
+    a.href = url; a.target = "_blank"; a.rel = "noopener";
+    row.appendChild(a);
+  }
+  body.appendChild(row);
+}
+
 function showWhereToWatch(id) {
   const movie = MOVIES.find((m) => m.id === id);
   const records = getAvailability().filter((r) => r.movieId === id && r.status === "available");
@@ -195,23 +212,16 @@ function showWhereToWatch(id) {
   const body = $("whereBody");
   body.innerHTML = "";
   $("whereTitle").textContent = movie && movie.title ? movie.title : "Где посмотреть";
-  let list = [];
-  body.appendChild(el("p", "source-disclaimer", "Ссылки взяты со страницы списка «500 лучших фильмов» на Кинопоиске. Другие сервисы не проверялись."));
-  if (russian.length) { body.appendChild(el("p", "", "Можно смотреть на платформе (по данным Кинопоиска):")); list = russian; }
-  else if (other.length) { body.appendChild(el("p", "", "Страница фильма на Кинопоиске (там указано, где его можно посмотреть):")); list = other; }
+  body.appendChild(el("p", "source-disclaimer", "Ссылки на Кинопоиск взяты со страницы списка «500 лучших фильмов». Другие сервисы не проверялись."));
+  if (russian.length) { body.appendChild(el("p", "", "Можно смотреть на платформе (по данным Кинопоиска):")); russian.forEach((r) => appendSourceRow(body, r.sourceName, r.url)); }
+  else if (other.length) { body.appendChild(el("p", "", "Страница фильма на Кинопоиске (там указано, где его можно посмотреть):")); other.forEach((r) => appendSourceRow(body, r.sourceName, r.url)); }
   else body.appendChild(el("p", "", "Сведения о доступности не найдены."));
-  list.forEach((r) => {
-    const row = el("div", "src");
-    row.appendChild(el("span", "tag", r.sourceName || "источник"));
-    if (/^https?:\/\//i.test(String(r.url || ""))) {
-      const a = el("a", "", "Перейти");
-      a.href = r.url; a.target = "_blank"; a.rel = "noopener";
-      row.appendChild(a);
-    }
-    body.appendChild(row);
-  });
+  if (movie) {
+    body.appendChild(el("p", "", "Найти фильм на других сайтах (поиск по названию и году):"));
+    SEARCH_SOURCES.forEach((s) => appendSourceRow(body, s.name, s.url(movie)));
+  }
   const dates = records.map((r) => r.checkedDate).filter(Boolean).sort();
-  $("whereNote").textContent = "Дата проверки: " + (dates.length ? dates[dates.length - 1] : "нет данных") + ". Доступность может измениться.";
+  $("whereNote").textContent = "Дата проверки: " + (dates.length ? dates[dates.length - 1] : "нет данных") + ". Доступность может измениться. Поисковые ссылки не проверялись.";
   $("whereDialog").showModal();
 }
 
